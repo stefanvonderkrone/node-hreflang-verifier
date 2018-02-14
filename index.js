@@ -7,13 +7,32 @@ const input = argv.in;
 const _readFile = promisify(fs.readFile);
 const readFile = async (...args) => _readFile(...args);
 
-const loadUrl = url => ({
+/**
+ *
+ * @async
+ * @param {String} url
+ *
+ * @returns {Promise.<{url: String, content: String}>}
+ */
+const loadUrl = async url => ({
   url,
   content: '',
 });
 
+/**
+ *
+ * @async
+ * @param {String[]} urls
+ *
+ * @returns {Promise.<Array.<{url:String, content: String}>>}
+ */
 const loadUrls = async urls => Promise.all(urls.map(loadUrl));
 
+/**
+ *
+ * @param {{url: String, content: String}} $0
+ * @returns {{url: String, hreflangs: Object}}
+ */
 const parseUrlContent = ({ url, content }) => ({
   url,
   hreflangs: {
@@ -22,8 +41,21 @@ const parseUrlContent = ({ url, content }) => ({
   },
 });
 
+/**
+ *
+ * @param {Object} o1
+ * @param {Object} o2
+ *
+ * @returns {Boolean}
+ */
 const objEquals = (o1, o2) => JSON.stringify(o1) === JSON.stringify(o2);
 
+/**
+ *
+ * @param {Array.<{url: String, hreflangs: Object}>} $0
+ *
+ * @returns {{previous: {url: String, hreflangs: Object}, completed: Array.<{url: String, hreflangs: Object, verified: Boolean}>}}
+ */
 const verifyContents = ([head, ...rest]) =>
   rest.reduce(
     ({ previous, completed }, current) => {
